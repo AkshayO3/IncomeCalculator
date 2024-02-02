@@ -2,7 +2,10 @@ import { Button, VerticalBox } from "std-widgets.slint";
 import { LineEdit } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
+    
     in property <string> results : "";
+    in-out property <bool> openCurtain;
+
     callback divideIncome(string);
     background: #313E50;
  GridLayout {
@@ -28,7 +31,10 @@ export component AppWindow inherits Window {
     Row{
         Button {
             text: "Calculate";
-            clicked => {divideIncome(income.text)}
+            clicked => {
+                root.openCurtain = !root.openCurtain;   // Toggle
+                divideIncome(income.text)
+            }
             primary: true;
             height: 35px;
         }
@@ -37,15 +43,39 @@ export component AppWindow inherits Window {
         VerticalBox {
             Rectangle {
                 height: 100px;
-                background: gray;
+                background: gold;
                     Text {
                         color:black;
                         font-size: 16px;
                         font-weight: 500;
                         text: root.results;
                     }  
+                Rectangle {
+                    background: wheat;
+                    x:0;
+                    height: parent.height;
+                    width: openCurtain? 0px : parent.width/2;
+                    animate width {
+                         duration: 250ms;
+                         easing: ease-in;
+                    }
+                }
+                Rectangle{
+                    background: wheat;
+                    x:openCurtain? parent.width:parent.width/2;
+                    height: parent.height;
+                    width: openCurtain? 0px:parent.width/2;
+                    animate width {
+                         duration: 250ms;
+                         easing: ease-in;
+                    }
+                    animate x {
+                         duration: 250ms;
+                         easing: ease-in;
+                    }
+                }
             }
         }
     }
-}
+    }
 }
